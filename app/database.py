@@ -18,13 +18,17 @@ def init_db():
         conn.commit()
 
 def store_weather_data(city, temperature, description):
-    with sqlite3.connect(DATABASE) as conn:
-        cursor = conn.cursor()
-        cursor.execute('''
-            INSERT INTO weather (city, temperature, description)
-            VALUES (?, ?, ?)
-        ''', (city, temperature, description))
-        conn.commit()
+    try:
+        with sqlite3.connect(DATABASE) as conn:
+            cursor = conn.cursor()
+            cursor.execute('''
+                INSERT INTO weather (city, temperature, description)
+                VALUES (?, ?, ?)
+            ''', (city, temperature, description))
+            conn.commit()
+        print(f"Data stored for {city}")
+    except Exception as e:
+        print(f"Error storing data: {str(e)}")
 
 def fetch_all_weather_data():
     with sqlite3.connect(DATABASE) as conn:
