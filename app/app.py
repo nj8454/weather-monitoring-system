@@ -2,8 +2,16 @@ from flask import Flask, jsonify
 import requests
 import json
 import os
+from models import db, WeatherData  # Import the db and model
 
 app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///weather_data.db'  # SQLite database URI
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+db.init_app(app)  # Initialize the SQLAlchemy object
+
+@app.before_first_request
+def create_tables():
+    db.create_all()  # Create tables before the first request
 API_KEY='edcf3000bfdd30731e494b719c606365'
 
 
@@ -24,18 +32,27 @@ def fetch_weather(city):
 
 @app.route('/trigger-fetch', methods=['POST'])
 def trigger_fetch():
-    # List of cities you want to fetch weather data for
     cities = ['London', 'New York', 'Tokyo']
     results = {}
-    
+
     for city in cities:
         weather_response = fetch_weather(city)
-        results[city] = weather_response.json()
-    
-    # Here, you might want to save the results to a file or database
-    with open('weather_data.json', 'w') as f:
-        json.dump(results, f)
-    
+        if weather_response.status_code == 200:
+            weather_data = weather_response.json()
+            city_name = weather_data['name']
+            main_weather = weather_data['weather'][0]['main']
+            temperature = weather_data['main']['temp']
+            feels_like = weather_data['main']['feels_like']
+
+            # Create a new WeatherData object
+            weather_record = WeatherData(city=city_name, main=main_weather, temp=temperature, feels_like=feels_like)
+
+            # Store the record in the database
+            db.session.add(weather_record)
+            db.session.commit()
+
+            results[city] = weather_data
+
     return jsonify({'status': 'success', 'data': results}), 200
 
 if __name__ == '__main__':
