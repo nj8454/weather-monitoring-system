@@ -9,12 +9,10 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///weather_data.db'  # SQLite da
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)  # Initialize the SQLAlchemy object
 
-@app.before_first_request
-def create_tables():
-    db.create_all()  # Create tables before the first request
+
 API_KEY='edcf3000bfdd30731e494b719c606365'
 
-
+    
 @app.route('/')
 def index():
     return 'Wlecome to weather monitoring'
@@ -32,7 +30,7 @@ def fetch_weather(city):
 
 @app.route('/trigger-fetch', methods=['POST'])
 def trigger_fetch():
-    cities = ['London', 'New York', 'Tokyo']
+    cities = ['Delhi', 'Mumbai', 'Chennai', 'Bangalore', 'Kolkata', 'Hyderabad']
     results = {}
 
     for city in cities:
@@ -56,4 +54,6 @@ def trigger_fetch():
     return jsonify({'status': 'success', 'data': results}), 200
 
 if __name__ == '__main__':
+    with app.app_context():
+        db.create_all()  # Create tables
     app.run(debug=True)
