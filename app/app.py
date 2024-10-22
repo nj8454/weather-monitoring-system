@@ -24,6 +24,7 @@ def index():
 @app.route('/trigger-fetch', methods=['POST'])
 def trigger_fetch():
     data = request.get_json()
+    cities = ['Mumbai', 'Bangalore', 'Delhi', 'Kolkata', 'Chennai', 'Hyderabad'];
     city = data.get('city')
     url = f'http://api.openweathermap.org/data/2.5/weather?q={city}&appid={API_KEY}&units=metric'
     response = requests.get(url)
@@ -38,8 +39,9 @@ def trigger_fetch():
         weather_record = WeatherData(city=city_name, main=main_weather, temp=temperature, feels_like=feels_like)
 
         # Store the record in the database
-        db.session.add(weather_record)
-        db.session.commit()
+        if city in cities:
+            db.session.add(weather_record)
+            db.session.commit()
         return jsonify({'status': 'success', 'data': {city: weather_data}})
     else:
         return jsonify({'status': 'error', 'error': 'City not found'}), 404
