@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+    <!-- Include Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Include Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f0f2f5;
+        }
+
+        .weather-card {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+            position: relative;
+            /* To position the sun icon */
+        }
+
+        .weather-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .input-group-text {
+            background-color: #fff;
+            border: none;
+        }
+
+        .weather-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .weather-info {
+            font-size: 18px;
+            color: #555;
+            margin-bottom: 10px;
+        }
+
+        .weather-btn {
+            background-color: #007bff;
+            border: none;
+        }
+
+        .weather-btn:hover {
+            background-color: #0056b3;
+        }
+
+        .sunny-icon {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: #ffce00;
+            font-size: 48px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="weather-card">
+            <div class="row justify-content-end">
+                <div class="col-auto">
+                    <div class="sunny-icon">
+                        <i class="bi bi-sun-fill"></i>
+                    </div>
+                </div>
+            </div>
+            <h1 class="weather-title text-center mb-4">Weather App</h1>
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" id="cityInput" placeholder="Enter Your City Name" aria-label="City Name" aria-describedby="button-addon2">
+                <button class="btn btn-primary weather-btn" type="button" id="getWeatherBtn">Get Weather</button>
+            </div>
+            <div id="weatherInfo" class="d-none">
+                <div class="weather-icon text-center">
+                    <i class="bi bi-cloud-sun"></i>
+                </div>
+                <div class="weather-info text-center">
+                    <p id="temperature">Temperature: 20°C</p>
+                    <p id="weather">Weather: Sunny</p>
+                    <p id="humidity">Humidity: 60%</p>
+                    <p id="windSpeed">Wind Speed: 5 m/s</p>
+                    <p id="visibility">Visibility: 10 km</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="weather-card" id="mumbaiCard">
+                    <div class="row justify-content-end">
+                        <div class="col-auto">
+                            <div class="sunny-icon">
+                                <i class="bi bi-sun-fill"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <h1 class="weather-title text-center mb-4">Mumbai</h1>
+                    <div id="mumbaiWeatherInfo" class="weather-info text-center">
+                        <p id="mumbaiTemperature">Temperature: --°C</p>
+                        <p id="mumbaiWeather">Weather: --</p>
+                        <p id="mumbaiHumidity">Humidity: --%</p>
+                        <p id="mumbaiWindSpeed">Wind Speed: -- m/s</p>
+                        <p id="mumbaiVisibility">Visibility: -- km</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="weather-card" id="bangaloreCard">
+                    <div class="row justify-content-end">
+                        <div class="col-auto">
+                            <div class="sunny-icon">
+                                <i class="bi bi-sun-fill"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <h1 class="weather-title text-center mb-4">Bangalore</h1>
+                    <div id="bangaloreWeatherInfo" class="weather-info text-center">
+                        <p id="bangaloreTemperature">Temperature: --°C</p>
+                        <p id="bangaloreWeather">Weather: --</p>
+                        <p id="bangaloreHumidity">Humidity: --%</p>
+                        <p id="bangaloreWindSpeed">Wind Speed: -- m/s</p>
+                        <p id="bangaloreVisibility">Visibility: -- km</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="weather-card" id="delhiCard">
+                    <div class="row justify-content-end">
+                        <div class="col-auto">
+                            <div class="sunny-icon">
+                                <i class="bi bi-sun-fill"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <h1 class="weather-title text-center mb-4">Delhi</h1>
+                    <div id="delhiWeatherInfo" class="weather-info text-center">
+                        <p id="delhiTemperature">Temperature: --°C</p>
+                        <p id="delhiWeather">Weather: --</p>
+                        <p id="delhiHumidity">Humidity: --%</p>
+                        <p id="delhiWindSpeed">Wind Speed: -- m/s</p>
+                        <p id="delhiVisibility">Visibility: -- km</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="weather-card" id="kolkataCard">
+                    <div class="row justify-content-end">
+                        <div class="col-auto">
+                            <div class="sunny-icon">
+                                <i class="bi bi-sun-fill"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <h1 class="weather-title text-center mb-4">Kolkata</h1>
+                    <div id="kolkataWeatherInfo" class="weather-info text-center">
+                        <p id="kolkataTemperature">Temperature: --°C</p>
+                        <p id="kolkataWeather">Weather: --</p>
+                        <p id="kolkataHumidity">Humidity: --%</p>
+                        <p id="kolkataWindSpeed">Wind Speed: -- m/s</p>
+                        <p id="kolkataVisibility">Visibility: -- km</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="weather-card" id="chennaiCard">
+                    <div class="row justify-content-end">
+                        <div class="col-auto">
+                            <div class="sunny-icon">
+                                <i class="bi bi-sun-fill"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <h1 class="weather-title text-center mb-4">Chennai</h1>
+                    <div id="chennaiWeatherInfo" class="weather-info text-center">
+                        <p id="chennaiTemperature">Temperature: --°C</p>
+                        <p id="chennaiWeather">Weather: --</p>
+                        <p id="chennaiHumidity">Humidity: --%</p>
+                        <p id="chennaiWindSpeed">Wind Speed: -- m/s</p>
+                        <p id="chennaiVisibility">Visibility: -- km</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="weather-card" id="hyderabadCard">
+                    <div class="row justify-content-end">
+                        <div class="col-auto">
+                            <div class="sunny-icon">
+                                <i class="bi bi-sun-fill"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <h1 class="weather-title text-center mb-4">Hyderabad</h1>
+                    <div id="hyderabadWeatherInfo" class="weather-info text-center">
+                        <p id="hyderabadTemperature">Temperature: --°C</p>
+                        <p id="hyderabadWeather">Weather: --</p>
+                        <p id="hyderabadHumidity">Humidity: --%</p>
+                        <p id="hyderabadWindSpeed">Wind Speed: -- m/s</p>
+                        <p id="hyderabadVisibility">Visibility: -- km</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Include Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.getElementById('getWeatherBtn').addEventListener('click', function () {
+            const city = document.getElementById('cityInput').value;
+
+            fetch('/trigger-fetch', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ city: city })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        const weather = data.data[city];
+                        document.getElementById('temperature').textContent = `Temperature: ${weather.main.temp} °C`;
+                        document.getElementById('weather').textContent = `Weather: ${weather.weather[0].description}`;
+                        document.getElementById('humidity').textContent = `Humidity: ${weather.main.humidity}%`;
+                        document.getElementById('windSpeed').textContent = `Wind Speed: ${weather.wind.speed} m/s`;
+                        document.getElementById('visibility').textContent = `Visibility: ${weather.visibility / 1000} km`;
+                        document.getElementById('weatherInfo').classList.remove('d-none');
+                    } else {
+                        alert(data.error);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        });
+
+        function fetchDefaultCities() {
+            const cities = ['Mumbai', 'Bangalore', 'Delhi', 'Kolkata', 'Chennai', 'Hyderabad'];
+            cities.forEach(city => {
+                fetch('/trigger-fetch', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ city: city })
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === 'success') {
+                            const weather = data.data[city];
+                            document.getElementById(`${city.toLowerCase()}Temperature`).textContent = `Temperature: ${weather.main.temp} °C`;
+                            document.getElementById(`${city.toLowerCase()}Weather`).textContent = `Weather: ${weather.weather[0].description}`;
+                            document.getElementById(`${city.toLowerCase()}Humidity`).textContent = `Humidity: ${weather.main.humidity}%`;
+                            document.getElementById(`${city.toLowerCase()}WindSpeed`).textContent = `Wind Speed: ${weather.wind.speed} m/s`;
+                            document.getElementById(`${city.toLowerCase()}Visibility`).textContent = `Visibility: ${weather.visibility / 1000} km`;
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+            });
+        }
+
+        window.onload = fetchDefaultCities;
+    </script>
+</body>
+
+</html>
