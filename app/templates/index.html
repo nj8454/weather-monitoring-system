@@ -9,9 +9,17 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Include Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Include Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style>
         body {
             background-color: #f0f2f5;
+            transition: background-color 0.3s;
+        }
+
+        .dark-mode {
+            background-color: #121212;
+            color: #ffffff;
         }
 
         .weather-card {
@@ -22,7 +30,12 @@
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             background-color: #fff;
             position: relative;
-            /* To position the sun icon */
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .dark-mode .weather-card {
+            background-color: #1e1e1e;
+            color: #ffffff;
         }
 
         .weather-title {
@@ -32,9 +45,18 @@
             margin-bottom: 20px;
         }
 
+        .dark-mode .weather-title {
+            color: #ffffff;
+        }
+
         .input-group-text {
             background-color: #fff;
             border: none;
+        }
+
+        .dark-mode .input-group-text {
+            background-color: #333;
+            color: #ffffff;
         }
 
         .weather-icon {
@@ -46,6 +68,10 @@
             font-size: 18px;
             color: #555;
             margin-bottom: 10px;
+        }
+
+        .dark-mode .weather-info {
+            color: #ffffff;
         }
 
         .weather-btn {
@@ -64,11 +90,64 @@
             color: #ffce00;
             font-size: 48px;
         }
+
+        .convert-btn {
+            display: block;
+            margin: 10px auto;
+        }
+
+        .toggle-btn, .dark-mode-toggle {
+            position: absolute;
+            top: 10px;
+            background-color: #007bff;
+            color: #ffffff;
+            border: none;
+            border-radius: 50%;
+            padding: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .toggle-btn:hover, .dark-mode-toggle:hover {
+            background-color: #0056b3;
+        }
+
+        .toggle-btn {
+            left: 10px;
+        }
+
+        .dark-mode-toggle {
+            right: 10px;
+        }
+
+        .dark-mode .toggle-btn, .dark-mode .dark-mode-toggle {
+            background-color: #333;
+        }
+
+        .dark-mode .toggle-btn:hover, .dark-mode .dark-mode-toggle:hover {
+            background-color: #555;
+        }
+
+        .high-temp {
+            animation: high-temp-animation 1s infinite;
+        }
+
+        @keyframes high-temp-animation {
+            0% { background-color: #ffcccc; }
+            50% { background-color: #ff6666; }
+            100% { background-color: #ffcccc; }
+        }
     </style>
 </head>
 
 <body>
     <div class="container">
+        <button class="toggle-btn" id="toggleTempBtn">
+            <i class="material-icons">thermostat</i>
+        </button>
+        <button class="dark-mode-toggle" id="toggleDarkModeBtn">
+            <i class="material-icons">brightness_4</i>
+        </button>
         <div class="weather-card">
             <div class="row justify-content-end">
                 <div class="col-auto">
@@ -87,17 +166,17 @@
                     <i class="bi bi-cloud-sun"></i>
                 </div>
                 <div class="weather-info text-center">
-                    <p id="temperature">Temperature: 20°C</p>
-                    <p id="weather">Weather: Sunny</p>
-                    <p id="humidity">Humidity: 60%</p>
-                    <p id="windSpeed">Wind Speed: 5 m/s</p>
-                    <p id="visibility">Visibility: 10 km</p>
+                    <p class="temperature">Temperature: 20°C</p>
+                    <p class="weather">Weather: Sunny</p>
+                    <p class="humidity">Humidity: 60%</p>
+                    <p class="windSpeed">Wind Speed: 5 m/s</p>
+                    <p class="visibility">Visibility: 10 km</p>
                 </div>
             </div>
         </div>
 
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-3">
                 <div class="weather-card" id="mumbaiCard">
                     <div class="row justify-content-end">
                         <div class="col-auto">
@@ -107,17 +186,17 @@
                         </div>
                     </div>
                     <h1 class="weather-title text-center mb-4">Mumbai</h1>
-                    <div id="mumbaiWeatherInfo" class="weather-info text-center">
-                        <p id="mumbaiTemperature">Temperature: --°C</p>
-                        <p id="mumbaiWeather">Weather: --</p>
-                        <p id="mumbaiHumidity">Humidity: --%</p>
-                        <p id="mumbaiWindSpeed">Wind Speed: -- m/s</p>
-                        <p id="mumbaiVisibility">Visibility: -- km</p>
+                    <div class="weather-info text-center">
+                        <p class="temperature">Temperature: --°C</p>
+                        <p class="weather">Weather: --</p>
+                        <p class="humidity">Humidity: --%</p>
+                        <p class="windSpeed">Wind Speed: -- m/s</p>
+                        <p class="visibility">Visibility: -- km</p>
                     </div>
                 </div>
             </div>
-            <div class="col-md-6">
-                <div class="weather-card" id="bangaloreCard">
+            <div class="col-md-3">
+                <div class="weather-card" id="bengaluruCard">
                     <div class="row justify-content-end">
                         <div class="col-auto">
                             <div class="sunny-icon">
@@ -125,17 +204,17 @@
                             </div>
                         </div>
                     </div>
-                    <h1 class="weather-title text-center mb-4">Bangalore</h1>
-                    <div id="bangaloreWeatherInfo" class="weather-info text-center">
-                        <p id="bangaloreTemperature">Temperature: --°C</p>
-                        <p id="bangaloreWeather">Weather: --</p>
-                        <p id="bangaloreHumidity">Humidity: --%</p>
-                        <p id="bangaloreWindSpeed">Wind Speed: -- m/s</p>
-                        <p id="bangaloreVisibility">Visibility: -- km</p>
+                    <h1 class="weather-title text-center mb-4">Bengaluru</h1>
+                    <div class="weather-info text-center">
+                        <p class="temperature">Temperature: --°C</p>
+                        <p class="weather">Weather: --</p>
+                        <p class="humidity">Humidity: --%</p>
+                        <p class="windSpeed">Wind Speed: -- m/s</p>
+                        <p class="visibility">Visibility: -- km</p>
                     </div>
                 </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-3">
                 <div class="weather-card" id="delhiCard">
                     <div class="row justify-content-end">
                         <div class="col-auto">
@@ -145,16 +224,16 @@
                         </div>
                     </div>
                     <h1 class="weather-title text-center mb-4">Delhi</h1>
-                    <div id="delhiWeatherInfo" class="weather-info text-center">
-                        <p id="delhiTemperature">Temperature: --°C</p>
-                        <p id="delhiWeather">Weather: --</p>
-                        <p id="delhiHumidity">Humidity: --%</p>
-                        <p id="delhiWindSpeed">Wind Speed: -- m/s</p>
-                        <p id="delhiVisibility">Visibility: -- km</p>
+                    <div class="weather-info text-center">
+                        <p class="temperature">Temperature: --°C</p>
+                        <p class="weather">Weather: --</p>
+                        <p class="humidity">Humidity: --%</p>
+                        <p class="windSpeed">Wind Speed: -- m/s</p>
+                        <p class="visibility">Visibility: -- km</p>
                     </div>
                 </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-3">
                 <div class="weather-card" id="kolkataCard">
                     <div class="row justify-content-end">
                         <div class="col-auto">
@@ -164,51 +243,69 @@
                         </div>
                     </div>
                     <h1 class="weather-title text-center mb-4">Kolkata</h1>
-                    <div id="kolkataWeatherInfo" class="weather-info text-center">
-                        <p id="kolkataTemperature">Temperature: --°C</p>
-                        <p id="kolkataWeather">Weather: --</p>
-                        <p id="kolkataHumidity">Humidity: --%</p>
-                        <p id="kolkataWindSpeed">Wind Speed: -- m/s</p>
-                        <p id="kolkataVisibility">Visibility: -- km</p>
+                    <div class="weather-info text-center">
+                        <p class="temperature">Temperature: --°C</p>
+                        <p class="weather">Weather: --</p>
+                        <p class="humidity">Humidity: --%</p>
+                        <p class="windSpeed">Wind Speed: -- m/s</p>
+                        <p class="visibility">Visibility: -- km</p>
                     </div>
                 </div>
             </div>
-            <div class="col-md-6">
-                <div class="weather-card" id="chennaiCard">
-                    <div class="row justify-content-end">
-                        <div class="col-auto">
-                            <div class="sunny-icon">
-                                <i class="bi bi-sun-fill"></i>
-                            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="weather-card" id="chennaiCard">
+                <div class="row justify-content-end">
+                    <div class="col-auto">
+                        <div class="sunny-icon">
+                            <i class="bi bi-sun-fill"></i>
                         </div>
-                    </div>
-                    <h1 class="weather-title text-center mb-4">Chennai</h1>
-                    <div id="chennaiWeatherInfo" class="weather-info text-center">
-                        <p id="chennaiTemperature">Temperature: --°C</p>
-                        <p id="chennaiWeather">Weather: --</p>
-                        <p id="chennaiHumidity">Humidity: --%</p>
-                        <p id="chennaiWindSpeed">Wind Speed: -- m/s</p>
-                        <p id="chennaiVisibility">Visibility: -- km</p>
                     </div>
                 </div>
+                <h1 class="weather-title text-center mb-4">Chennai</h1>
+                <div id="chennaiWeatherInfo" class="weather-info text-center">
+                    <p id="chennaiTemperature">Temperature: --°C</p>
+                    <p id="chennaiWeather">Weather: --</p>
+                    <p id="chennaiHumidity">Humidity: --%</p>
+                    <p id="chennaiWindSpeed">Wind Speed: -- m/s</p>
+                    <p id="chennaiVisibility">Visibility: -- km</p>
+                </div>
             </div>
-            <div class="col-md-6">
-                <div class="weather-card" id="hyderabadCard">
-                    <div class="row justify-content-end">
-                        <div class="col-auto">
-                            <div class="sunny-icon">
-                                <i class="bi bi-sun-fill"></i>
-                            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="weather-card" id="hyderabadCard">
+                <div class="row justify-content-end">
+                    <div class="col-auto">
+                        <div class="sunny-icon">
+                            <i class="bi bi-sun-fill"></i>
                         </div>
                     </div>
-                    <h1 class="weather-title text-center mb-4">Hyderabad</h1>
-                    <div id="hyderabadWeatherInfo" class="weather-info text-center">
-                        <p id="hyderabadTemperature">Temperature: --°C</p>
-                        <p id="hyderabadWeather">Weather: --</p>
-                        <p id="hyderabadHumidity">Humidity: --%</p>
-                        <p id="hyderabadWindSpeed">Wind Speed: -- m/s</p>
-                        <p id="hyderabadVisibility">Visibility: -- km</p>
+                </div>
+                <h1 class="weather-title text-center mb-4">Hyderabad</h1>
+                <div id="hyderabadWeatherInfo" class="weather-info text-center">
+                    <p id="hyderabadTemperature">Temperature: --°C</p>
+                    <p id="hyderabadWeather">Weather: --</p>
+                    <p id="hyderabadHumidity">Humidity: --%</p>
+                    <p id="hyderabadWindSpeed">Wind Speed: -- m/s</p>
+                    <p id="hyderabadVisibility">Visibility: -- km</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="weather-card" id="khartoumCard">
+                <div class="row justify-content-end">
+                    <div class="col-auto">
+                        <div class="sunny-icon">
+                            <i class="bi bi-sun-fill"></i>
+                        </div>
                     </div>
+                </div>
+                <h1 class="weather-title text-center mb-4">Khartoum</h1>
+                <div class="weather-info text-center">
+                    <p class="temperature">Temperature: --°C</p>
+                    <p class="weather">Weather: --</p>
+                    <p class="humidity">Humidity: --%</p>
+                    <p class="windSpeed">Wind Speed: -- m/s</p>
                 </div>
             </div>
         </div>
@@ -231,12 +328,14 @@
                 .then(data => {
                     if (data.status === 'success') {
                         const weather = data.data[city];
-                        document.getElementById('temperature').textContent = `Temperature: ${weather.main.temp} °C`;
-                        document.getElementById('weather').textContent = `Weather: ${weather.weather[0].description}`;
-                        document.getElementById('humidity').textContent = `Humidity: ${weather.main.humidity}%`;
-                        document.getElementById('windSpeed').textContent = `Wind Speed: ${weather.wind.speed} m/s`;
-                        document.getElementById('visibility').textContent = `Visibility: ${weather.visibility / 1000} km`;
-                        document.getElementById('weatherInfo').classList.remove('d-none');
+                        const tempCelsius = weather.main.temp;
+                        const weatherInfo = document.getElementById('weatherInfo');
+                        weatherInfo.querySelector('.temperature').textContent = `Temperature: ${tempCelsius} °C`;
+                        weatherInfo.querySelector('.weather').textContent = `Weather: ${weather.weather[0].description}`;
+                        weatherInfo.querySelector('.humidity').textContent = `Humidity: ${weather.main.humidity}%`;
+                        weatherInfo.querySelector('.windSpeed').textContent = `Wind Speed: ${weather.wind.speed} m/s`;
+                        weatherInfo.querySelector('.visibility').textContent = `Visibility: ${weather.visibility / 1000} km`;
+                        weatherInfo.classList.remove('d-none');
                     } else {
                         alert(data.error);
                     }
@@ -247,25 +346,26 @@
         });
 
         function fetchDefaultCities() {
-            const cities = ['Mumbai', 'Bangalore', 'Delhi', 'Kolkata', 'Chennai', 'Hyderabad'];
+            const cities = ['Mumbai', 'Bengaluru', 'Delhi', 'Kolkata', 'Chennai', 'Hyderabad','Khartoum'];
             cities.forEach(city => {
-                fetch('/trigger-fetch', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ city: city })
-                })
+                fetch(`/get-latest-weather/${city}`)
                     .then(response => response.json())
                     .then(data => {
                         if (data.status === 'success') {
-                            const weather = data.data[city];
-                            document.getElementById(`${city.toLowerCase()}Temperature`).textContent = `Temperature: ${weather.main.temp} °C`;
-                            document.getElementById(`${city.toLowerCase()}Weather`).textContent = `Weather: ${weather.weather[0].description}`;
-                            document.getElementById(`${city.toLowerCase()}Humidity`).textContent = `Humidity: ${weather.main.humidity}%`;
-                            document.getElementById(`${city.toLowerCase()}WindSpeed`).textContent = `Wind Speed: ${weather.wind.speed} m/s`;
-                            document.getElementById(`${city.toLowerCase()}Visibility`).textContent = `Visibility: ${weather.visibility / 1000} km`;
+                        console.log(`High temperature detected for ${data.high_temp}`); // Debugging statement
+                        const weather = data.data;
+                        const tempCelsius = weather.temp;
+                        const card = document.getElementById(`${city.toLowerCase()}Card`);
+                        if (data.high_temp) {
+                            console.log(`High temperature detected for ${city}`); // Debugging statement
+                            card.classList.add('high-temp');
                         }
+                        card.querySelector('.temperature').textContent = `Temperature: ${tempCelsius} °C`;
+                        card.querySelector('.weather').textContent = `Weather: ${weather.weather}`;
+                        card.querySelector('.humidity').textContent = `Humidity: ${weather.humidity}%`;
+                        card.querySelector('.windSpeed').textContent = `Wind Speed: ${weather.wind_speed} m/s`;
+                        card.querySelector('.visibility').textContent = `Visibility: ${weather.visibility} km`;
+                    }
                     })
                     .catch(error => {
                         console.error('Error:', error);
@@ -273,7 +373,41 @@
             });
         }
 
-        window.onload = fetchDefaultCities;
+        function convertToFahrenheit(celsius) {
+            return (celsius * 9/5) + 32;
+        }
+
+        function convertToCelsius(fahrenheit) {
+            return (fahrenheit - 32) * 5/9;
+        }
+
+        function setupConvertButtons() {
+            const toggleTempBtn = document.getElementById('toggleTempBtn');
+            toggleTempBtn.addEventListener('click', function () {
+                const isCelsius = toggleTempBtn.querySelector('i').textContent === 'thermostat';
+                document.querySelectorAll('.temperature').forEach(tempElement => {
+                    const tempValue = parseFloat(tempElement.textContent.split(' ')[1].replace(isCelsius ? '°C' : '°F', ''));
+                    const newTemp = isCelsius ? convertToFahrenheit(tempValue) : convertToCelsius(tempValue);
+                    tempElement.textContent = `Temperature: ${newTemp.toFixed(2)} °${isCelsius ? 'F' : 'C'}`;
+                });
+
+                toggleTempBtn.querySelector('i').textContent = isCelsius ? 'thermostat_auto' : 'thermostat';
+            });
+        }
+
+        function setupDarkModeToggle() {
+            const toggleDarkModeBtn = document.getElementById('toggleDarkModeBtn');
+            toggleDarkModeBtn.addEventListener('click', function () {
+                document.body.classList.toggle('dark-mode');
+                toggleDarkModeBtn.querySelector('i').textContent = document.body.classList.contains('dark-mode') ? 'brightness_7' : 'brightness_4';
+            });
+        }
+
+        window.onload = function() {
+            fetchDefaultCities();
+            setupConvertButtons();
+            setupDarkModeToggle();
+        };
     </script>
 </body>
 
