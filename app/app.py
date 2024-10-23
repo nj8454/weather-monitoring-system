@@ -6,7 +6,7 @@ import json
 import schedule
 import time
 import os
-from sqlalchemy import desc  # Import desc from SQLAlchemy
+from sqlalchemy import desc, func  # Import desc from SQLAlchemy
 from models import db, WeatherData  # Import the db and model
 
 app = Flask(__name__)
@@ -93,6 +93,44 @@ def run_scheduler():
     while True:
         schedule.run_pending()
         time.sleep(1)
+
+@app.route('/get-historical-data/<city>', methods=['GET'])
+def get_historical_data(city):
+    # Get daily averages for the past 7 days
+    daily_data = db.session.query(
+        func.date(WeatherData.date_time).label('date'),
+        func.avg(WeatherData.temp).label('avg_temp'),
+        func.max(WeatherData.temp).label('max_temp'),
+        func.min(WeatherData.temp).label('min_temp'),
+        func.avg(WeatherData.humidity).label('avg_humidity')
+    ).filter(
+        WeatherData.city == city
+    ).group_by(
+        func.date(WeatherData.date_time)
+    ).order_by(
+        func.date(WeatherData.date_time).desc()
+    ).limit(7).all()
+
+    # Get alert history
+    alerts = db.session.query(WeatherData).filter(
+        WeatherData.city == city,
+        WeatherData.temp > 35
+    ).order_by(WeatherData.date_time.desc()).limit(10).all()
+
+    return jsonify({
+        'daily_data': [{
+            'date': str(record.date),
+            'avg_temp': float(record.avg_temp),
+            'max_temp': float(record.max_temp),
+            'min_temp': float(record.min_temp),
+            'avg_humidity': float(record.avg_humidity)
+        } for record in daily_data],
+        'alerts': [{
+            'date_time': str(alert.date_time),
+            'temp': alert.temp
+        } for alert in alerts]
+    })
+
 
 if __name__ == '__main__':
     scheduler_thread = threading.Thread(target=run_scheduler)
